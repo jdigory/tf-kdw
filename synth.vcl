@@ -31,6 +31,7 @@ sub vcl_error {
 </head>
 <body>
   <h1>kilo delta whiskey</h1>
+  <h2>🥃</h2>
 </body>
 </html>
 "};
