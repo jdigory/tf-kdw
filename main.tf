@@ -21,7 +21,38 @@ resource "fastly_service_v1" "kdw" {
     name = "www.${var.domain}"
   }
 
-  force_destroy = true
+  request_setting {
+    name      = "${var.domain}"
+    force_ssl = true
+  }
+
+  response_object {
+    name              = "redirect www"
+    status            = 301
+    response          = "Moved Permanently"
+    request_condition = "Host is www"
+  }
+
+  condition {
+    name      = "Host is www"
+    statement = "req.http.host == \"www.kdw.us\""
+    type      = "REQUEST"
+  }
+
+  header {
+    name               = "Location for www redirect"
+    action             = "set"
+    type               = "response"
+    destination        = "http.Location"
+    source             = "\"https://kdw.us/\""
+    response_condition = "Set location for www redirect"
+  }
+
+  condition {
+    name      = "Set location for www redirect"
+    statement = "req.http.host == \"www.kdw.us\" && resp.status == 301"
+    type      = "RESPONSE"
+  }
 
   vcl {
     name    = "main"
