@@ -35,7 +35,7 @@ resource "fastly_service_v1" "kdw" {
 
   condition {
     name      = "Host is www"
-    statement = "req.http.host == \"www.kdw.us\""
+    statement = "req.http.Fastly-Orig-Host == \"www.kdw.us\""
     type      = "REQUEST"
   }
 
@@ -50,7 +50,7 @@ resource "fastly_service_v1" "kdw" {
 
   condition {
     name      = "Set location for www redirect"
-    statement = "req.http.host == \"www.kdw.us\" && resp.status == 301"
+    statement = "req.http.Fastly-Orig-Host == \"www.kdw.us\" && resp.status == 301"
     type      = "RESPONSE"
   }
 
